@@ -105,8 +105,10 @@ function choice() {
     choose=$(zenity --list "Movies" "English words" "Some random list here" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
-        "Movies") filename="movies" ;;
-        "English words") filename="/usr/share/dict/american-english" ;;
+        "Movies")
+            filename="movies" ;;
+        "English words")
+            filename="/usr/share/dict/american-english" ;;
         "Some random list here") ;;
     esac
     menu
