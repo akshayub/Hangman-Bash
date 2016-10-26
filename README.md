@@ -5,4 +5,4 @@ This is a mini-project for the course IT202 : Unix programming and practice, for
 
 It is a guessing game.
 
-Presently, only movies are available as the questions.
+Presently, only movies and American English words are available as the questions.
