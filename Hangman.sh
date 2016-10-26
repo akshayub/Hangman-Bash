@@ -1,5 +1,5 @@
 clear
-readarray a < list
+
 function wrong1 {
 echo "        O           "
 }
@@ -89,110 +89,141 @@ done
 }
 
 echo
-
 display
-
-randind=`expr $RANDOM % ${#a[@]}`
-
-movie=${a[$randind]}
-# echo $movie
-
-guess=()
-
-guesslist=()
-guin=0
-
-movie=`echo $movie | tr -dc '[:alnum:] \n\r' | tr '[:upper:]' '[:lower:]'`
-len=${#movie}
-
-for ((i=0;i<$len;i++)); do
-    guess[$i]="_"
-done
-
-mov=()
-
-for ((i=0;i<$len;i++)); do
-    mov[$i]=${movie:$i:1}
-    # echo -n "${mov[$i]} "
-done
-
-for ((j=0;j<$len;j++)); do
-    if [[ ${mov[$j]} == " " ]]; then
-        guess[$j]=" "
-    fi
-done
-
-## Display the initial setup
-
-wrong=0
-
-while [[ $wrong -lt 7 ]]; do
-    case $wrong in
-    0)echo " "
-    ;;
-    1)wrong1
-    ;;
-    2)wrong2
-    ;;
-    3)wrong3
-    ;;
-    4)wrong4
-    ;;
-    5)wrong5
-    ;;
-    6)wrong6
-    ;;
-    7)wrong7
-    ;;
-esac
-    echo Guess List: ${guesslist[@]}
-    echo Wrong guesses: $wrong
-    for ((k=0;k<$len;k++)); do
-        echo -n "${guess[$k]} "
-    done
+##The main menu where you will be asked to choose the categories.
+##And also if the user wants custom words, he/she can add the file path
+function menu() {
+    ## Supresses the error message that comes with the usage of GTK+
+    exec 2> /dev/null
+    selection=$(zenity --list "Play the game" "Choose a topic" "Use custom list" --column="" --text="Choose an option" --title="Game options" --cancel-label="Quit")
+    case "$selection" in
+        "Play the game") main;;
+        "Choose a topic") choice;;
+        "Use custom list") ;;
+    esac
     echo
-    echo
-    echo -n "Guess a letter: "
-    read -n 1 -e letter
-    guesslist[$guin]=$letter
-    guin=`expr $guin + 1`
+}
 
-    f=0;
+filename="list"
+
+function choice() {
+    choose=$(zenity --list "Movies" "English words" "Some random list here" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
+
+    case $choose in
+        "Movies") filename="list" ;;
+        "English words") filename="/usr/share/dict/american-english" ;;
+        "Some random list here") ;;
+    esac
+    menu
+}
+
+##The function used to read the word list
+readarray a < $filename
+
+function main() {
+
+    randind=`expr $RANDOM % ${#a[@]}`
+
+    movie=${a[$randind]}
+    # echo $movie
+
+    guess=()
+
+    guesslist=()
+    guin=0
+
+    movie=`echo $movie | tr -dc '[:alnum:] \n\r' | tr '[:upper:]' '[:lower:]'`
+    len=${#movie}
+
     for ((i=0;i<$len;i++)); do
-        if [[ ${mov[$i]} == $letter ]]; then
-            guess[$i]=$letter
-            f=1
-        fi
+        guess[$i]="_"
     done
-    if [[ f -eq 0 ]]; then
-        wrong=`expr $wrong + 1`
-    fi
-    ##Hangman goes here
 
-    ##Hangman should end here
-    notover=0
+    mov=()
+
+    for ((i=0;i<$len;i++)); do
+        mov[$i]=${movie:$i:1}
+        # echo -n "${mov[$i]} "
+    done
+
     for ((j=0;j<$len;j++)); do
-        if [[ ${guess[$j]} == "_" ]]; then
-            notover=1
+        if [[ ${mov[$j]} == " " ]]; then
+            guess[$j]=" "
         fi
     done
-    if [[ notover -eq 0 ]]; then
-        echo You Win!
+
+    ## Display the initial setup
+
+    wrong=0
+
+    while [[ $wrong -lt 7 ]]; do
+        case $wrong in
+        0)echo " "
+        ;;
+        1)wrong1
+        ;;
+        2)wrong2
+        ;;
+        3)wrong3
+        ;;
+        4)wrong4
+        ;;
+        5)wrong5
+        ;;
+        6)wrong6
+        ;;
+        7)wrong7
+        ;;
+    esac
+        echo Guess List: ${guesslist[@]}
+        echo Wrong guesses: $wrong
         for ((k=0;k<$len;k++)); do
             echo -n "${guess[$k]} "
         done
         echo
-        exit
-    fi
-    clear
-done
-printf "         |          "
-printf "\n"
-printf "         O          "
-printf "\n"
-echo -n "        /|\           "
-printf "\n"
-echo -n "        / \            "
-echo You lost!
-echo The movie was: $movie                                            
+        echo
+        echo -n "Guess a letter: "
+        read -n 1 -e letter
+        guesslist[$guin]=$letter
+        guin=`expr $guin + 1`
 
+        f=0;
+        for ((i=0;i<$len;i++)); do
+            if [[ ${mov[$i]} == $letter ]]; then
+                guess[$i]=$letter
+                f=1
+            fi
+        done
+        if [[ f -eq 0 ]]; then
+            wrong=`expr $wrong + 1`
+        fi
+        notover=0
+        for ((j=0;j<$len;j++)); do
+            if [[ ${guess[$j]} == "_" ]]; then
+                notover=1
+            fi
+        done
+        if [[ notover -eq 0 ]]; then
+            echo You Win!
+            for ((k=0;k<$len;k++)); do
+                echo -n "${guess[$k]} "
+            done
+            echo
+            exit
+        fi
+        clear
+    done
+    printf "         |          "
+    printf "\n"
+    printf "         O          "
+    printf "\n"
+    echo -n "        /|\           "
+    printf "\n"
+    echo -n "        / \            "
+    echo You lost!
+    echo The word was: $movie
+}
+
+menu
+if [[ notover -eq 0 ]]; then
+    
