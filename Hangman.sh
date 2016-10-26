@@ -1,39 +1,74 @@
 clear
 
 function wrong1 {
-echo "        O           "
+    echo
+    echo "        O             "
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo
 }
 function wrong2 {
-echo "         O          "
-echo "         |           "
+    echo
+    echo "         O            "
+    echo "         |            "
+    echo
+    echo
+    echo
+    echo
+    echo
 }
 function wrong3 {
-echo "         O          "
-echo "         |\           "
+    echo
+    echo "         O            "
+    echo "         |\           "
+    echo
+    echo
+    echo
+    echo
+    echo
 }
 function wrong4 {
-echo "         O          "
-echo "        /|\           "
+    echo
+    echo "         O            "
+    echo "        /|\           "
+    echo
+    echo
+    echo
+    echo
+    echo
 }
 function wrong5 {
-echo "         O"
-echo "        /|\ "
-echo "        /    "
+    echo
+    echo "         O            "
+    echo "        /|\           "
+    echo "        /             "
+    echo
+    echo
+    echo
+    echo
 }
 function wrong6 {
-echo "         O"
-echo "        /|\ "
-echo "        / \ "
+    echo
+    echo "         O            "
+    echo "        /|\           "
+    echo "        / \           "
+    echo
+    echo
+    echo
+    echo
 }
 function wrong7 {
-echo
-echo "         __________ "
-echo "         |        |"
-echo "         O        |"
-echo "        /|\       |"
-echo "        / \       |"
-echo "    ______________|___ "
-echo
+    echo
+    echo "         __________   "
+    echo "         |        |   "
+    echo "         O        |   "
+    echo "        /|\       |   "
+    echo "        / \       |   "
+    echo "    ______________|___"
+    echo
 }
 
 function display {
@@ -62,7 +97,6 @@ function display {
     }
 
     trap 'exit 1' INT TERM
-    trap 'tput setaf 9; tput cvvis; clear' EXIT
 
     tput civis
     clear
@@ -90,11 +124,11 @@ display
 function menu() {
     ## Supresses the error message that comes with the usage of GTK+
     exec 2> /dev/null
-    selection=$(zenity --list "Play the game" "Choose a topic" "Use custom list" --column="" --text="Choose an option" --title="Game options" --cancel-label="Quit")
+    selection=$(zenity --list "Play the game" "Choose a topic" "Exit" --column="" --text="Choose an option" --title="Game options" --cancel-label="Quit")
     case "$selection" in
         "Play the game") main;;
         "Choose a topic") choice;;
-        "Use custom list") ;;
+        "Exit") exit;;
     esac
     echo
 }
@@ -102,16 +136,29 @@ function menu() {
 filename="movies"
 
 function choice() {
-    choose=$(zenity --list "Movies" "English words" "Some random list here" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
+    choose=$(zenity --list "Movies" "English words" "Select a file" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
         "Movies")
             filename="movies" ;;
         "English words")
             filename="/usr/share/dict/american-english" ;;
-        "Some random list here") ;;
+        "Select a file")
+            file_select ;;
     esac
     menu
+}
+
+function file_select() {
+    filename=$(zenity --file-selection --title="Select a file")
+    case $? in
+        0)
+            echo "\"$filename\" selected";;
+        1)
+            echo "No file selected" ;;
+        -1)
+            echo "Unexpected error occurred" ;;
+    esac
 }
 
 ##The function used to read the word list
@@ -155,21 +202,36 @@ function main() {
 
     while [[ $wrong -lt 7 ]]; do
         case $wrong in
-        0)echo " "
-        ;;
-        1)wrong1
-        ;;
-        2)wrong2
-        ;;
-        3)wrong3
-        ;;
-        4)wrong4
-        ;;
-        5)wrong5
-        ;;
-        6)wrong6
-        ;;
-    esac
+            0)echo " "
+            ;;
+            1)wrong1
+            ;;
+            2)wrong2
+            ;;
+            3)wrong3
+            ;;
+            4)wrong4
+            ;;
+            5)wrong5
+            ;;
+            6)wrong6
+            ;;
+        esac
+
+        if [[ wrong -eq 0 ]]; then
+            for i in {1..7}
+            do
+                echo
+            done
+        fi
+
+        notover=0
+        for ((j=0;j<$len;j++)); do
+            if [[ ${guess[$j]} == "_" ]]; then
+                notover=1
+            fi
+        done
+
         echo Guess List: ${guesslist[@]}
         echo Wrong guesses: $wrong
         for ((k=0;k<$len;k++)); do
@@ -177,10 +239,13 @@ function main() {
         done
         echo
         echo
-        echo -n "Guess a letter: "
-        read -n 1 -e letter
-        guesslist[$guin]=$letter
-        guin=`expr $guin + 1`
+
+        if [[ notover -eq 1 ]]; then
+            echo -n "Guess a letter: "
+            read -n 1 -e letter
+            guesslist[$guin]=$letter
+            guin=`expr $guin + 1`
+        fi
 
         f=0;
         for ((i=0;i<$len;i++)); do
@@ -192,24 +257,17 @@ function main() {
         if [[ f -eq 0 ]]; then
             wrong=`expr $wrong + 1`
         fi
-        notover=0
-        for ((j=0;j<$len;j++)); do
-            if [[ ${guess[$j]} == "_" ]]; then
-                notover=1
-            fi
-        done
+
         if [[ notover -eq 0 ]]; then
             echo
             echo You Win!
-            for ((k=0;k<$len;k++)); do
-                echo -n "${guess[$k]} "
-            done
+            echo $movie
             echo
             exit
         fi
         clear
     done
-    
+
     wrong7
     echo You lost!
     echo The word was: $movie
