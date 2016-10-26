@@ -225,5 +225,4 @@ function main() {
 }
 
 menu
-if [[ notover -eq 0 ]]; then
     
