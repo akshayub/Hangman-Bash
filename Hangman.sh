@@ -6,31 +6,31 @@ echo "        O           "
 function wrong2 {
 printf "         O          "
 printf "\n"
-echo -n "         |           "
+echo "         |           "
 }
 function wrong3 {
 printf "         O          "
 printf "\n"
-echo -n "         |\           "
+echo "         |\           "
 }
 function wrong4 {
 printf "         O          "
 printf "\n"
-echo -n "        /|\           "
+echo "        /|\           "
 }
 function wrong5 {
 printf "         O          "
 printf "\n"
 echo -n "        /|\           "
 printf "\n"
-echo -n "         /            "
+echo "         /            "
 }
 function wrong6 {
 printf "         O          "
 printf "\n"
 echo -n "        /|\           "
 printf "\n"
-echo -n "         /\            "
+echo "         /\            "
 }
 function wrong7 {
 printf "        |          "
@@ -38,54 +38,54 @@ printf "         O          "
 printf "\n"
 echo -n "        /|\           "
 printf "\n"
-echo -n "         /\            "
+echo "         /\            "
 }
 
 function display {
-DATA[0]=" #     #    #    #     #  #####  #     #    #    #     #"
-DATA[1]=" #     #   # #   ##    # #     # ##   ##   # #   ##    #"
-DATA[2]=" #     #  #   #  # #   # #       # # # #  #   #  # #   #"
-DATA[3]=" ####### #     # #  #  # #  #### #  #  # #     # #  #  #"
-DATA[4]=" #     # ####### #   # # #     # #     # ####### #   # #"
-DATA[5]=" #     # #     # #    ## #     # #     # #     # #    ##"
-DATA[6]=" #     # #     # #     #  #####  #     # #     # #     #"
-echo
+    DATA[0]=" #     #    #    #     #  #####  #     #    #    #     #"
+    DATA[1]=" #     #   # #   ##    # #     # ##   ##   # #   ##    #"
+    DATA[2]=" #     #  #   #  # #   # #       # # # #  #   #  # #   #"
+    DATA[3]=" ####### #     # #  #  # #  #### #  #  # #     # #  #  #"
+    DATA[4]=" #     # ####### #   # # #     # #     # ####### #   # #"
+    DATA[5]=" #     # #     # #    ## #     # #     # #     # #    ##"
+    DATA[6]=" #     # #     # #     #  #####  #     # #     # #     #"
+    echo
 
 
-# virtual coordinate system is X*Y ${#DATA} * 8
+    # virtual coordinate system is X*Y ${#DATA} * 8
 
-REAL_OFFSET_X=0
-REAL_OFFSET_Y=0
+    REAL_OFFSET_X=0
+    REAL_OFFSET_Y=0
 
-draw_char() {
-  V_COORD_X=$1
-  V_COORD_Y=$2
+    draw_char() {
+        V_COORD_X=$1
+        V_COORD_Y=$2
 
-  tput cup $((REAL_OFFSET_Y + V_COORD_Y)) $((REAL_OFFSET_X + V_COORD_X))
+        tput cup $((REAL_OFFSET_Y + V_COORD_Y)) $((REAL_OFFSET_X + V_COORD_X))
 
-  printf %c ${DATA[V_COORD_Y]:V_COORD_X:1}
-}
+        printf %c ${DATA[V_COORD_Y]:V_COORD_X:1}
+    }
 
-trap 'exit 1' INT TERM
-trap 'tput setaf 9; tput cvvis; clear' EXIT
+    trap 'exit 1' INT TERM
+    trap 'tput setaf 9; tput cvvis; clear' EXIT
 
-tput civis
-clear
-tempp=8
-while :; do
-tempp=`expr $tempp - 8`
-for ((c=1; c <= 7; c++)); do
-  tput setaf $c
-  for ((x=0; x<${#DATA[0]}; x++)); do
-    for ((y=0; y<=6; y++)); do
-      draw_char $x $y
+    tput civis
+    clear
+    tempp=8
+    while :; do
+        tempp=`expr $tempp - 8`
+        for ((c=1; c <= 7; c++)); do
+            tput setaf $c
+            for ((x=0; x<${#DATA[0]}; x++)); do
+                for ((y=0; y<=6; y++)); do
+                    draw_char $x $y
+                done
+            done
+        done
+        sleep 1
+        clear
+        break
     done
-  done
-done
-sleep 1
-clear
-break
-done
 }
 
 echo
@@ -104,13 +104,13 @@ function menu() {
     echo
 }
 
-filename="list"
+filename="movies"
 
 function choice() {
     choose=$(zenity --list "Movies" "English words" "Some random list here" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
-        "Movies") filename="list" ;;
+        "Movies") filename="movies" ;;
         "English words") filename="/usr/share/dict/american-english" ;;
         "Some random list here") ;;
     esac
@@ -204,6 +204,7 @@ function main() {
             fi
         done
         if [[ notover -eq 0 ]]; then
+            echo
             echo You Win!
             for ((k=0;k<$len;k++)); do
                 echo -n "${guess[$k]} "
@@ -225,7 +226,3 @@ function main() {
 }
 
 menu
-<<<<<<< HEAD
-=======
-    
->>>>>>> 842198ad25eb40719c48efb8dbbcba79097c9632
