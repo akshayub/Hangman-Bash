@@ -4,41 +4,36 @@ function wrong1 {
 echo "        O           "
 }
 function wrong2 {
-printf "         O          "
-printf "\n"
+echo "         O          "
 echo "         |           "
 }
 function wrong3 {
-printf "         O          "
-printf "\n"
+echo "         O          "
 echo "         |\           "
 }
 function wrong4 {
-printf "         O          "
-printf "\n"
+echo "         O          "
 echo "        /|\           "
 }
 function wrong5 {
-printf "         O          "
-printf "\n"
-echo -n "        /|\           "
-printf "\n"
-echo "         /            "
+echo "         O"
+echo "        /|\ "
+echo "        /    "
 }
 function wrong6 {
-printf "         O          "
-printf "\n"
-echo -n "        /|\           "
-printf "\n"
-echo "         /\            "
+echo "         O"
+echo "        /|\ "
+echo "        / \ "
 }
 function wrong7 {
-printf "        |          "
-printf "         O          "
-printf "\n"
-echo -n "        /|\           "
-printf "\n"
-echo "         /\            "
+echo
+echo "         __________ "
+echo "         |        |"
+echo "         O        |"
+echo "        /|\       |"
+echo "        / \       |"
+echo "    ______________|___ "
+echo
 }
 
 function display {
@@ -54,8 +49,8 @@ function display {
 
     # virtual coordinate system is X*Y ${#DATA} * 8
 
-    REAL_OFFSET_X=0
-    REAL_OFFSET_Y=0
+    REAL_OFFSET_X=$(($((`tput cols` - 56)) / 2))
+    REAL_OFFSET_Y=$(($((`tput lines` - 6)) / 2))
 
     draw_char() {
         V_COORD_X=$1
@@ -172,8 +167,6 @@ function main() {
         ;;
         6)wrong6
         ;;
-        7)wrong7
-        ;;
     esac
         echo Guess List: ${guesslist[@]}
         echo Wrong guesses: $wrong
@@ -214,13 +207,8 @@ function main() {
         fi
         clear
     done
-    printf "         |          "
-    printf "\n"
-    printf "         O          "
-    printf "\n"
-    echo -n "        /|\           "
-    printf "\n"
-    echo -n "        / \            "
+    
+    wrong7
     echo You lost!
     echo The word was: $movie
 }
