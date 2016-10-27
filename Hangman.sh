@@ -136,11 +136,13 @@ function menu() {
 filename="movies"
 
 function choice() {
-    choose=$(zenity --list "Movies" "English words" "Select a file" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
+    choose=$(zenity --list "Movies" "Bollywood" "English words" "Select a file" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
         "Movies")
             filename="movies" ;;
+        "Bollywood")
+            filename="bollywood" ;;
         "English words")
             filename="/usr/share/dict/american-english" ;;
         "Select a file")
