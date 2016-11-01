@@ -1,4 +1,8 @@
 clear
+##This is the default file name if the user doesn't select any file
+filename="movies"
+
+##These are the stick figures to be displayed if the user does a wrong guess
 
 function wrong1 {
     echo
@@ -83,6 +87,7 @@ function display {
 
 
     # virtual coordinate system is X*Y ${#DATA} * 8
+    ## This is to put the title in the centre
 
     REAL_OFFSET_X=$(($((`tput cols` - 56)) / 2))
     REAL_OFFSET_Y=$(($((`tput lines` - 6)) / 2))
@@ -124,6 +129,7 @@ display
 function menu() {
     ## Supresses the error message that comes with the usage of GTK+
     exec 2> /dev/null
+    ## Uses the zenity module, which comes pre-installed with Debian
     selection=$(zenity --list "Play the game" "Choose a topic" "Exit" --column="" --text="Choose an option" --title="Game options" --cancel-label="Quit")
     case "$selection" in
         "Play the game") main;;
@@ -132,21 +138,15 @@ function menu() {
     esac
     echo
 }
-
-filename="movies"
-
+##This function allows the user to choose a topic or add one
 function choice() {
     choose=$(zenity --list "Movies" "Bollywood" "English words" "Select a file" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
-        "Movies")
-            filename="movies" ;;
-        "Bollywood")
-            filename="bollywood" ;;
-        "English words")
-            filename="/usr/share/dict/american-english" ;;
-        "Select a file")
-            file_select ;;
+        "Movies") filename="movies";;
+        "Bollywood") filename="bollywood";;
+        "English words") filename="/usr/share/dict/american-english";;
+        "Select a file") file_select;;
     esac
     menu
 }
@@ -170,7 +170,6 @@ function main() {
     randind=`expr $RANDOM % ${#a[@]}`
 
     movie=${a[$randind]}
-    # echo $movie
 
     guess=()
 
@@ -244,6 +243,7 @@ function main() {
         if [[ notover -eq 1 ]]; then
             echo -n "Guess a letter: "
             read -n 1 -e letter
+            letter=$(echo $letter | tr [A-Z] [a-z])
             guesslist[$guin]=$letter
             guin=`expr $guin + 1`
         fi
