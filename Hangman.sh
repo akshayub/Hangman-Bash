@@ -164,13 +164,9 @@ function file_select() {
 }
 
 function main() {
-<<<<<<< HEAD
-    readarray a < $filename
-=======
     ##The function used to read the word list
     readarray a < $filename
 
->>>>>>> 66b6e1accf14cc95f2eb8aa0018cfb48bb8f7e46
     randind=`expr $RANDOM % ${#a[@]}`
 
     movie=${a[$randind]}
