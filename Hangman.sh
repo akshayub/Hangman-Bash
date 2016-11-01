@@ -163,10 +163,9 @@ function file_select() {
     esac
 }
 
-##The function used to read the word list
-readarray a < $filename
-
 function main() {
+    ##The function used to read the word list
+    readarray a < $filename
 
     randind=`expr $RANDOM % ${#a[@]}`
 
@@ -265,6 +264,7 @@ function main() {
             echo You Win!
             echo $movie
             echo
+            tput cnorm
             exit
         fi
         clear
@@ -273,6 +273,7 @@ function main() {
     wrong7
     echo You lost!
     echo The word was: $movie
+    tput cnorm
 }
 
 menu
