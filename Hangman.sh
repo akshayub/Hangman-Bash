@@ -1,4 +1,5 @@
 clear
+filename="movies"
 
 function wrong1 {
     echo
@@ -124,6 +125,7 @@ display
 function menu() {
     ## Supresses the error message that comes with the usage of GTK+
     exec 2> /dev/null
+    ## Uses the zenity module, which comes pre-installed with Debian
     selection=$(zenity --list "Play the game" "Choose a topic" "Exit" --column="" --text="Choose an option" --title="Game options" --cancel-label="Quit")
     case "$selection" in
         "Play the game") main;;
@@ -133,20 +135,14 @@ function menu() {
     echo
 }
 
-filename="movies"
-
 function choice() {
     choose=$(zenity --list "Movies" "Bollywood" "English words" "Select a file" --column="" --text="Choose a list" --title="Game options" --cancel-label="Back")
 
     case $choose in
-        "Movies")
-            filename="movies" ;;
-        "Bollywood")
-            filename="bollywood" ;;
-        "English words")
-            filename="/usr/share/dict/american-english" ;;
-        "Select a file")
-            file_select ;;
+        "Movies") filename="movies";;
+        "Bollywood") filename="bollywood";;
+        "English words") filename="/usr/share/dict/american-english";;
+        "Select a file") file_select;;
     esac
     menu
 }
@@ -164,10 +160,10 @@ function file_select() {
 }
 
 ##The function used to read the word list
-readarray a < $filename
+
 
 function main() {
-
+    readarray a < $filename
     randind=`expr $RANDOM % ${#a[@]}`
 
     movie=${a[$randind]}
