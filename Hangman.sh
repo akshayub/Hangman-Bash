@@ -164,7 +164,13 @@ function file_select() {
 }
 
 function main() {
+<<<<<<< HEAD
     readarray a < $filename
+=======
+    ##The function used to read the word list
+    readarray a < $filename
+
+>>>>>>> 66b6e1accf14cc95f2eb8aa0018cfb48bb8f7e46
     randind=`expr $RANDOM % ${#a[@]}`
 
     movie=${a[$randind]}
@@ -262,6 +268,7 @@ function main() {
             echo You Win!
             echo $movie
             echo
+            tput cnorm
             exit
         fi
         clear
@@ -270,6 +277,7 @@ function main() {
     wrong7
     echo You lost!
     echo The word was: $movie
+    tput cnorm
 }
 
 menu
