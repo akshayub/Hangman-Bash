@@ -258,8 +258,7 @@ function main() {
             echo You Win!
             echo $movie
             echo
-            tput cnorm
-            exit
+            play_again
         fi
         clear
     done
@@ -267,7 +266,22 @@ function main() {
     wrong7
     echo You lost!
     echo The word was: $movie
+    play_again
+}
+
+function play_again(){
+    echo
+    echo -n "Would you like to play again? (y/n) "
+    read -n 1 choice
+    case $choice in
+        [yY]) clear
+              main 
+        ;;
+    esac
+    clear
+    echo "Thanks for playing!"
     tput cnorm
+    exit
 }
 
 function init(){
