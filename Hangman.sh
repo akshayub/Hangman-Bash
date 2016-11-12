@@ -1,7 +1,3 @@
-clear
-##This is the default file name if the user doesn't select any file
-filename="movies"
-
 ##These are the stick figures to be displayed if the user does a wrong guess
 
 function wrong1 {
@@ -122,8 +118,6 @@ function display {
     done
 }
 
-echo
-display
 ##The main menu where you will be asked to choose the categories.
 ##And also if the user wants custom words, he/she can add the file path
 function menu() {
@@ -276,4 +270,15 @@ function main() {
     tput cnorm
 }
 
-menu
+function init(){
+    clear
+    ##This is the default file name if the user doesn't select any file
+    filename="movies"
+    
+    echo
+    display
+    
+    menu
+}
+
+init
