@@ -11,7 +11,7 @@ There is an option to make the game use your own list.
 
 # Execution
 
-Clone the repo
+Clone the repo.
 Run "Hangman.sh"
 
 # Contribution
